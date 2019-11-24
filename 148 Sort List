@@ -1,0 +1,47 @@
+public class SortList {
+    /**
+     * Sort a linked list in O(n log n) time using constant space complexity.
+     *
+     * time : O(nlogn)
+     * space : O(n)
+     *
+     * @param head
+     * @return
+     */
+
+    public ListNode sortList(ListNode head) {
+        if (head == null || head.next == null) return head; //边界检查
+        ListNode middle = getMiddle(head); //找到中点
+        ListNode next = middle.next; //建立一个中点节点
+        middle.next = null; //中点节点指向空，这样就把链表分成了两个部分
+        return merge(sortList(head), sortList(next)); 调用mergesort，把两个链表排序
+    }
+    //建立快慢指针，快指针每走两步，慢指针走一步，最后走完链表后，慢指针所指的元素就是中点
+    private ListNode getMiddle(ListNode head) {
+        ListNode slow = head;
+        ListNode fast = head;
+        while (fast.next != null && fast.next.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+        return slow;
+    }
+    //merge sort
+    private ListNode merge(ListNode a, ListNode b) {
+        ListNode dummy = new ListNode(0);
+        ListNode cur = dummy;
+        while (a != null && b != null) {
+            if (a.val <= b.val) {
+                cur.next = a;
+                a = a.next;
+            } else {
+                cur.next = b;
+                b = b.next;
+            }
+            cur = cur.next;
+        }
+        if (a == null) cur.next = b;
+        else cur.next = a;
+        return dummy.next;
+    }
+}
